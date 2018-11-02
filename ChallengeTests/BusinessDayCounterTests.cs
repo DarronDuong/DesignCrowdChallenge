@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesignCrowdTechChallenge
+namespace ChallengeTests
 {
-    public class Class1
+    class BusinessDayCounterTests
     {
     }
 }
