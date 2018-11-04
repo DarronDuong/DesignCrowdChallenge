@@ -210,7 +210,6 @@ namespace TaskOneTests
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod]
         public void CalculateWeekDays_When1Nov2018To15Nov2018__ThenReturn9()
         {
@@ -372,7 +371,6 @@ namespace TaskOneTests
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod]
         public void CalculateWeekDays_When4Nov2018To24Nov2018__ThenReturn15()
         {
@@ -467,6 +465,7 @@ namespace TaskOneTests
         #endregion
 
         #region Task 3 Tests
+
         [TestMethod]
         public void CalculateBusinessDaysExtended_When7Oct2013To9Oct2013__ThenReturn1()
         {
@@ -517,6 +516,7 @@ namespace TaskOneTests
             //Assert
             Assert.AreEqual(expected, actual);
         }
+
         #endregion
     }
 }

@@ -11,10 +11,10 @@ namespace DesignCrowdTechChallenge
         /// <summary>
         /// Calculate number of weekdays between 2 specific dates
         /// STEP 1: Get total days between 2 dates (incl. 2nd date by default)
-        /// STEP 2: Get number of weekend day from the full week(s) (exclusive if outside the full week(s)
+        /// STEP 2: Get number of weekend day from the full week(s) (not include if outside the full week(s))
         /// STEP 3: Check if 1st date & 2nd date are the same day of week
-        /// ==== if no => go to STEP 4,
-        /// ==== if yes, calculate weekends in the following 3 scenarios
+        /// ==== if yes => go to STEP 4,
+        /// ==== if no, calculate weekends in the following 3 scenarios
         /// ==== 3.1: scenario 1 - 1st day is weekday
         /// ==== 3.2: scenario 2 - 1st day is Saturday
         /// ==== 3.3: scenario 3 - 1st day is Sunday
@@ -96,11 +96,11 @@ namespace DesignCrowdTechChallenge
 
             if (businessDays <= 0) return 0;
 
-            publicHolidays.ToList().ForEach(holiday =>
+            foreach (var holiday in publicHolidays)
             {
                 if (holiday > firstDate && holiday < secondDate)
                     businessDays--;
-            });
+            }
 
             return businessDays;
         }
@@ -127,22 +127,22 @@ namespace DesignCrowdTechChallenge
             if (firstDate.Year == secondDate.Year)
             {
                 var rules = new HolidayRules(firstDate.Year);
-                holidays = rules.Holidays();
+                holidays = rules.Holidays;
             }
             else
             {
                 for (var i = firstDate.Year; i <= secondDate.Year; i++)
                 {
                     var tempRules = new HolidayRules(i);
-                    holidays = holidays.Concat(tempRules.Holidays()).ToList();
+                    holidays = holidays.Concat(tempRules.Holidays).ToList();
                 }
             }
 
-            foreach (var holiday in holidays)
+            holidays.ForEach(holiday =>
             {
                 if (holiday > firstDate && holiday < secondDate)
                     businessDays--;
-            }
+            });
 
             return businessDays;
         }
@@ -167,7 +167,6 @@ namespace DesignCrowdTechChallenge
             }
         }
     }
-
 
     public class HolidayRules
     {
@@ -199,7 +198,8 @@ namespace DesignCrowdTechChallenge
         public DateTime QueensBirthday
         {
             get
-            {
+            {   
+                // Queen's Birthday - 2nd Monday of June
                 var queensBirthday = new DateTime(_year, 6, 1);
                 byte mondayIndex = 0;
 
@@ -226,12 +226,13 @@ namespace DesignCrowdTechChallenge
         {
             get
             {
+                //Labor Day - 1st Monday of October
                 var laborDay = new DateTime(_year, 10, 1);
-                var dayOfWeek = laborDay.DayOfWeek;
-                while (dayOfWeek != DayOfWeek.Monday)
+                var tempDayOfWeek = laborDay.DayOfWeek;
+                while (tempDayOfWeek != DayOfWeek.Monday)
                 {
                     laborDay = laborDay.AddDays(1);
-                    dayOfWeek = laborDay.DayOfWeek;
+                    tempDayOfWeek = laborDay.DayOfWeek;
                 }
 
                 return laborDay;
@@ -248,12 +249,15 @@ namespace DesignCrowdTechChallenge
             get { return AdjustWeekendHoliday(new DateTime(_year, 12, 26)); }
         }
 
-        public List<DateTime> Holidays()
+        public List<DateTime> Holidays
         {
-            return new List<DateTime>()
+            get
             {
-                NewYearDay, AustralianDay, AnzacDay, QueensBirthday, LaborDay, ChristmasDay, BoxingDay
-            };
+                return new List<DateTime>()
+                {
+                    NewYearDay, AustralianDay, AnzacDay, QueensBirthday, LaborDay, ChristmasDay, BoxingDay
+                };
+            }
         }
 
         private static DateTime AdjustWeekendHoliday(DateTime holiday)
